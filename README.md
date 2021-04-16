@@ -1,6 +1,9 @@
 # rouDapp
 Decentralized Roulette using Chain Link VRF 🎲
 
+## Demo
+*to be deployed to Netlify*
+
 ## Installation
 
 ### Frontend
