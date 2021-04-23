@@ -1,7 +1,6 @@
-import React, { useCallback, useEffect, useMemo } from "react";
-import { COLOR, RouletteNumber } from "../../types/Roulette";
+import React, { useCallback } from "react";
 import styled from "styled-components";
-import { useHover } from "../../hooks/useHover";
+import { COLOR, RouletteNumber } from "../../types/Roulette";
 
 const CIRCLE_SIZE = 50;
 const DRAGZONE_WIDTH = 30;

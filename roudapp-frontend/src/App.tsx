@@ -1,7 +1,6 @@
-import React from 'react';
-import './App.css';
+import React from "react";
 import styled from "styled-components";
-import Web3Btn from "./components/Web3/Web3Btn";
+import "./App.css";
 import Board from "./components/Board/Board";
 
 const Wrapper = styled.div`
@@ -14,8 +13,8 @@ const Wrapper = styled.div`
 function App() {
   return (
     <Wrapper>
-      <Board/>
-        {/*<Web3Btn label={"Set Count"}/>*/}
+      <Board />
+      {/*<Web3Btn label={"Set Count"}/>*/}
     </Wrapper>
   );
 }
