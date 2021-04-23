@@ -88,11 +88,13 @@ const Cell: React.FC<Props> = ({ number, hoveredCells, setHoveredCells }) => {
             onDragOver={(e) =>
               setHoveredCells(createSequenceFrom(number.value, 3))
             }
+            onDragExit={(e) => setHoveredCells([])}
           />
           <TwoRowDragzone
             onDragOver={(e) =>
               setHoveredCells(createSequenceFrom(number.value, 6))
             }
+            onDragExit={(e) => setHoveredCells([])}
           />
         </>
       )}
@@ -103,11 +105,13 @@ const Cell: React.FC<Props> = ({ number, hoveredCells, setHoveredCells }) => {
             onDragOver={(e) =>
               setHoveredCells(createSequenceFrom(number.value, -3))
             }
+            onDragExit={(e) => setHoveredCells([])}
           />
           <TwoRowDragzoneRight
             onDragOver={(e) =>
               setHoveredCells(createSequenceFrom(number.value, -6))
             }
+            onDragExit={(e) => setHoveredCells([])}
           />
         </>
       )}
