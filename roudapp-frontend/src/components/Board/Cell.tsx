@@ -51,6 +51,13 @@ const TwoRowDragzone = styled.div`
   left: ${-DRAGZONE_WIDTH / 2}px;
   bottom: -20%;
 `;
+const TwoRowDragzoneRight = styled.div`
+  position: absolute;
+  height: 40%;
+  width: ${DRAGZONE_WIDTH}px;
+  right: ${-DRAGZONE_WIDTH / 2}px;
+  bottom: -20%;
+`;
 
 type Props = {
   number: RouletteNumber;
@@ -61,7 +68,9 @@ type Props = {
 const createSequenceFrom = (n: number, length: number): number[] => {
   return new Array(Math.abs(length))
     .fill(n)
-    .map((num, i) => (length > 0 ? num + i : num - i));
+    .map((num, i) =>
+      length > 0 ? num + i : length < -3 ? num + 3 - i : num - i
+    );
 };
 const Cell: React.FC<Props> = ({ number, hoveredCells, setHoveredCells }) => {
   const onClickEvent = useCallback(() => {
@@ -89,11 +98,18 @@ const Cell: React.FC<Props> = ({ number, hoveredCells, setHoveredCells }) => {
       )}
 
       {hasRowDragzoneRight && (
-        <RowDragzoneRight
-          onDragOver={(e) =>
-            setHoveredCells(createSequenceFrom(number.value, -3))
-          }
-        />
+        <>
+          <RowDragzoneRight
+            onDragOver={(e) =>
+              setHoveredCells(createSequenceFrom(number.value, -3))
+            }
+          />
+          <TwoRowDragzoneRight
+            onDragOver={(e) =>
+              setHoveredCells(createSequenceFrom(number.value, -6))
+            }
+          />
+        </>
       )}
 
       <StyledCell
