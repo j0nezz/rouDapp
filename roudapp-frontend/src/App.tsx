@@ -1,21 +1,28 @@
 import React from "react";
-import styled from "styled-components";
-import "./App.css";
-import Board from "./components/Board/Board";
-
-const Wrapper = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-`;
+import { BrowserRouter, Route, Switch } from "react-router-dom";
+import "./App.scss";
+import { Web3ContextProvider } from "./components/context/Web3Context";
+import Game from "./components/Routes/game";
+import Landing from "./components/Routes/landing";
+import { GlobalStyle } from "./theme/global-styles";
 
 function App() {
   return (
-    <Wrapper>
-      <Board />
-      {/*<Web3Btn label={"Set Count"}/>*/}
-    </Wrapper>
+    <>
+      <GlobalStyle />
+      <Web3ContextProvider>
+        <BrowserRouter>
+          <Switch>
+            <Route exact path={"/"}>
+              <Landing />
+            </Route>
+            <Route path={"/app"}>
+              <Game />
+            </Route>
+          </Switch>
+        </BrowserRouter>{" "}
+      </Web3ContextProvider>
+    </>
   );
 }
 
