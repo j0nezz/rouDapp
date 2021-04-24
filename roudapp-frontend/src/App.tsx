@@ -1,6 +1,5 @@
 import React from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
-import "./App.scss";
 import { Web3ContextProvider } from "./components/context/Web3Context";
 import Game from "./components/Routes/game";
 import Landing from "./components/Routes/landing";
