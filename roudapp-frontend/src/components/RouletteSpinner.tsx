@@ -40,7 +40,7 @@ const RouletteSpinner: React.FC<Props> = ({ infinite }) => {
         x="0px"
         y="0px"
       >
-        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
           <RotatingGroup
             infinite={infinite}
             fill={__COLORS.GRAY}

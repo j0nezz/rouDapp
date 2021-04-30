@@ -14,7 +14,6 @@ const WithConnectedAccountRoute: React.FC<Props> = ({
 }) => {
   const { account, loading } = useWeb3Context();
   if (loading) {
-    console.log("route guard loading");
     return <Loading />;
   }
   if (account) {

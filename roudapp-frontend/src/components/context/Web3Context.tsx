@@ -37,10 +37,6 @@ export const Web3ContextProvider: React.FC = ({ children }) => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    console.log("loading", loading);
-  }, [loading]);
-
   const connectWallet = useCallback(() => {
     if ((window as any).ethereum) {
       setLoading(true);

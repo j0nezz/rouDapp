@@ -17,6 +17,7 @@ export const Title = styled.h1`
   -moz-text-fill-color: transparent;
   text-fill-color: transparent;
   text-align: center;
+  line-height: 1;
 `;
 
 export const Subtitle = styled.h2`

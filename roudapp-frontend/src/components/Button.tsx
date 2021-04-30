@@ -1,6 +1,6 @@
-import styled from "styled-components";
-import { __COLORS, SPACING } from "../theme/theme";
 import { lighten } from "polished";
+import styled from "styled-components";
+import { SPACING, __COLORS } from "../theme/theme";
 
 export const Button = styled.button`
   margin-top: ${SPACING * 4}px;
@@ -13,5 +13,8 @@ export const Button = styled.button`
   color: white;
   font-weight: 600;
   border-radius: 5px;
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
 `;
-

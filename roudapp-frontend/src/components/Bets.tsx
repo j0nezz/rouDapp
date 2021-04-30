@@ -1,6 +1,8 @@
 import React, { useCallback } from "react";
 import { Button } from "./Button";
+import { usePopupContext } from "./context/PopupContext";
 import { useWeb3Context } from "./context/Web3Context";
+import ResultPopup from "./Popups/ResultPopup";
 
 // type Bet = {
 //   numbersPlaced: number[];
@@ -13,12 +15,21 @@ type Props = {
 
 const Bets: React.FC<Props> = ({ placedBets }) => {
   const { contract, account } = useWeb3Context();
+  const { setPopup } = usePopupContext();
 
   const placeBets = useCallback(() => {
-    contract.methods
-      .playGame(placedBets[0], 12345)
-      .send({ from: account, value: 10 });
-  }, [account, contract.methods, placedBets]);
+    if (placedBets.length > 0) {
+      contract.methods
+        .playGame(placedBets[0], 12345)
+        .send(
+          { from: account, value: 10 * 6 },
+          (err: any, transactionHash: string) => {
+            console.log("transaction hash", transactionHash);
+            setPopup(<ResultPopup bet={placedBets[0]} tx={transactionHash} />);
+          }
+        );
+    }
+  }, [account, contract.methods, placedBets, setPopup]);
 
   return (
     <div>
@@ -39,7 +50,9 @@ const Bets: React.FC<Props> = ({ placedBets }) => {
         );
       })}
 
-      <Button onClick={placeBets}>Place Bets</Button>
+      <Button onClick={placeBets} disabled={placedBets.length < 1}>
+        Place Bets
+      </Button>
     </div>
   );
 };
