@@ -6,6 +6,7 @@ import Web3 from "web3";
 import { __FONT_FAMILIES } from "../../theme/fonts";
 import { SPACING, __COLORS } from "../../theme/theme";
 import { useWeb3Context } from "../context/Web3Context";
+import { Button } from "../Button";
 
 const Wrapper = styled.div`
   display: flex;
@@ -49,19 +50,6 @@ const Subtitle = styled.h2`
   -moz-text-fill-color: transparent;
   text-fill-color: transparent;
   text-align: center;
-`;
-
-const Button = styled.button`
-  margin-top: ${SPACING * 4}px;
-  padding: ${SPACING * 1.5}px ${SPACING * 2}px;
-  background: linear-gradient(
-    to top right,
-    ${__COLORS.SECONDARY},
-    ${lighten(0.15, __COLORS.SECONDARY)}
-  );
-  color: white;
-  font-weight: 600;
-  border-radius: 5px;
 `;
 
 const Error = styled.div`
