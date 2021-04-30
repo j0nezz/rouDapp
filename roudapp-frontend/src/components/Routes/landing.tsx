@@ -1,11 +1,11 @@
-import { lighten } from "polished";
-import React, { useCallback, useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import Web3 from "web3";
-import { __FONT_FAMILIES } from "../../theme/fonts";
 import { SPACING, __COLORS } from "../../theme/theme";
+import { Subtitle, Title } from "../../theme/typography";
+import { Button } from "../Button";
 import { useWeb3Context } from "../context/Web3Context";
+import RouletteSpinner from "../RouletteSpinner";
 
 const Wrapper = styled.div`
   display: flex;
@@ -16,86 +16,25 @@ const Wrapper = styled.div`
   background: linear-gradient(to bottom, ${__COLORS.WHITE}, ${__COLORS.GRAY});
 `;
 
-const Title = styled.h1`
-  font-size: 5em;
-  background: linear-gradient(
-    to right,
-    ${__COLORS.PRIMARY},
-    ${__COLORS.PRIMARY_GRADIENT}
-  );
-  -webkit-background-clip: text;
-  -moz-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  -moz-text-fill-color: transparent;
-  text-fill-color: transparent;
-  text-align: center;
-`;
-
-const Subtitle = styled.h2`
-  font-size: 1.5em;
-  color: ${__COLORS.SECONDARY};
-  font-family: ${__FONT_FAMILIES.BODY};
-  font-weight: 500;
-  background: linear-gradient(
-    to right,
-    ${__COLORS.SECONDARY},
-    ${lighten(0.2, __COLORS.SECONDARY)}
-  );
-  -webkit-background-clip: text;
-  -moz-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  -moz-text-fill-color: transparent;
-  text-fill-color: transparent;
-  text-align: center;
-`;
-
-const Button = styled.button`
-  margin-top: ${SPACING * 4}px;
-  padding: ${SPACING * 1.5}px ${SPACING * 2}px;
-  background: linear-gradient(
-    to top right,
-    ${__COLORS.SECONDARY},
-    ${lighten(0.15, __COLORS.SECONDARY)}
-  );
-  color: white;
-  font-weight: 600;
-  border-radius: 5px;
-`;
-
 const Error = styled.div`
   margin-top: ${SPACING}px;
   color: darkred;
 `;
 
 const Landing = () => {
-  const [error, setError] = useState("");
-  const Web3Context = useWeb3Context();
+  const { connectWallet, error, account } = useWeb3Context();
 
-  const onConnectWallet = useCallback(() => {
-    if ((window as any).ethereum) {
-      // @ts-ignore
-      Web3Context.setMetamask(new Web3(window.ethereum));
-      try {
-        // @ts-ignore
-        window.ethereum.enable();
-      } catch (e) {
-        console.log("could not enable ethereum");
-      }
-    } else {
-      setError("No provider found.");
-    }
-  }, [Web3Context]);
   return (
     <Wrapper>
+      <RouletteSpinner />
       <Title>RouDapp</Title>
       <Subtitle>Decentralized Roulette using ChainLink VRF</Subtitle>
-      <Button onClick={onConnectWallet}>Connect Wallet</Button>
-      {Web3Context.metamask && (
+      {account ? (
         <Link to={"/app"}>
           <Button>Open App</Button>
         </Link>
+      ) : (
+        <Button onClick={connectWallet}>Connect Wallet</Button>
       )}
       <Error>{error}</Error>
     </Wrapper>

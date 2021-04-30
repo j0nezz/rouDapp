@@ -1,5 +1,5 @@
 import { lighten } from "polished";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import styled from "styled-components";
 import { RouletteNumbers } from "../../types/Roulette";
 import Cell from "./Cell";
@@ -27,13 +27,6 @@ const BoardWrapper = styled.div`
   flex: 2;
 `;
 
-const Container = styled.div`
-  max-width: 1200px;
-  margin: auto;
-  width: 100%;
-  display: flex;
-`;
-
 const ZeroNumber = styled.div`
   grid-column: 1/4;
   display: flex;
@@ -44,11 +37,19 @@ const ZeroNumber = styled.div`
   padding-bottom: 10px;
 `;
 
-const Board = () => {
+type Props = {
+  onDropCallback: (n: number[]) => void;
+};
+const Board: React.FC<Props> = ({ onDropCallback }) => {
   const [hoveredCells, setHoveredCells] = useState<number[]>([]);
 
+  const onDropHandler = useCallback(() => {
+    onDropCallback(hoveredCells);
+    setHoveredCells([]);
+  }, [hoveredCells, onDropCallback]);
+
   return (
-    <Container>
+    <>
       <BoardWrapper>
         <ZeroNumber>0</ZeroNumber>
         {RouletteNumbers.slice(1).map((num) => (
@@ -56,13 +57,18 @@ const Board = () => {
             number={num}
             setHoveredCells={setHoveredCells}
             hoveredCells={hoveredCells}
+            onDropCallback={onDropHandler}
           />
         ))}
       </BoardWrapper>
       <ChipsWrapper>
-        <Chip draggable color={"#41426F"} />
+        <Chip
+          draggable
+          color={"#41426F"}
+          onDragEnd={() => setHoveredCells([])}
+        />
       </ChipsWrapper>
-    </Container>
+    </>
   );
 };
 
