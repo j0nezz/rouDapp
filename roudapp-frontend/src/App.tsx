@@ -1,6 +1,7 @@
 import React from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { Web3ContextProvider } from "./components/context/Web3Context";
+import WithConnectedAccountRoute from "./components/helpers/RouteGuards";
 import Game from "./components/Routes/game";
 import Landing from "./components/Routes/landing";
 import { GlobalStyle } from "./theme/global-styles";
@@ -15,11 +16,11 @@ function App() {
             <Route exact path={"/"}>
               <Landing />
             </Route>
-            <Route path={"/app"}>
+            <WithConnectedAccountRoute path={"/app"}>
               <Game />
-            </Route>
+            </WithConnectedAccountRoute>
           </Switch>
-        </BrowserRouter>{" "}
+        </BrowserRouter>
       </Web3ContextProvider>
     </>
   );

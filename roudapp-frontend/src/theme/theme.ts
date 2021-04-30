@@ -4,6 +4,9 @@ export enum __COLORS {
   SECONDARY = "#2D2370",
   WHITE = "#ffffff",
   GRAY = "#eee",
+  RED = "#ff0000",
+  BLACK = "#000",
+  GOLD = "#FFD700",
 }
 
 export const SPACING = 8;

@@ -1,27 +1,66 @@
-import { createContext, useCallback, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import Web3 from "web3";
 import { CONTRACT_ABI, CONTRACT_ADDRESS } from "../../contract";
+import {
+  hasPreviouslyConnectedWallet,
+  setHasPreviouslyConnectedWallet,
+} from "../helpers/hasPreviouslyConnectedWallet";
 
 type Web3ContextType = {
   metamask: Web3 | null;
-  setMetamask: (w: Web3) => void;
   account: string;
   contract: any;
+  connectWallet: () => void;
+  error: string;
+  loading: boolean;
 };
 
 const Web3Context = createContext<Web3ContextType>({
   metamask: null,
-  setMetamask: () => null,
-  account: '',
-  contract: null
+  account: "",
+  contract: null,
+  connectWallet: () => null,
+  error: "",
+  loading: true,
 });
 
 export const Web3ContextProvider: React.FC = ({ children }) => {
   const [metamask, setMetamask] = useState<Web3 | null>(null);
-  const [account, setAccount] = useState('');
+  const [account, setAccount] = useState("");
   const [contract, setContract] = useState<any>(null);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
 
-  const initializeContract = useCallback(async ()=>{
+  useEffect(() => {
+    console.log("loading", loading);
+  }, [loading]);
+
+  const connectWallet = useCallback(() => {
+    if ((window as any).ethereum) {
+      setLoading(true);
+      // @ts-ignore
+      setMetamask(new Web3(window.ethereum));
+      try {
+        // @ts-ignore
+        window.ethereum.enable();
+        setHasPreviouslyConnectedWallet();
+      } catch (e) {
+        setLoading(false);
+        console.log("could not enable ethereum");
+      }
+    } else {
+      setError("No Provider found.");
+      setLoading(false);
+    }
+  }, []);
+
+  const initializeContract = useCallback(async () => {
     if (!metamask) return;
     const accountResponse = await metamask.eth.getAccounts();
     if (accountResponse.length === 0) {
@@ -30,21 +69,27 @@ export const Web3ContextProvider: React.FC = ({ children }) => {
     }
     // @ts-ignore
     setContract(new metamask.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS));
-    console.log(contract);
-    setAccount(accountResponse[0])
+    setAccount(accountResponse[0]);
+    setLoading(false);
   }, [metamask]);
 
-  useEffect(() =>{
-    console.log(metamask);
-    if (metamask){
-      console.log('init');
+  useEffect(() => {
+    if (metamask) {
       initializeContract();
-      }
     }
-  ,[metamask]);
+  }, [initializeContract, metamask]);
+
+  useEffect(() => {
+    if (hasPreviouslyConnectedWallet()) {
+      // show spinner so that it doesn't appears to flicker
+      setTimeout(connectWallet, 500);
+    }
+  }, [connectWallet]);
 
   return (
-    <Web3Context.Provider value={{ metamask, setMetamask, account, contract}}>
+    <Web3Context.Provider
+      value={{ metamask, account, contract, connectWallet, error, loading }}
+    >
       {children}
     </Web3Context.Provider>
   );

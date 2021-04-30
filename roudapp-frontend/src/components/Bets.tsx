@@ -1,7 +1,6 @@
 import React, { useCallback } from "react";
 import { Button } from "./Button";
 import { useWeb3Context } from "./context/Web3Context";
-import { CONTRACT_ABI, CONTRACT_ADDRESS } from "../contract";
 
 // type Bet = {
 //   numbersPlaced: number[];
@@ -13,14 +12,13 @@ type Props = {
 };
 
 const Bets: React.FC<Props> = ({ placedBets }) => {
-  const {contract, account} = useWeb3Context();
+  const { contract, account } = useWeb3Context();
 
-  const placeBets = useCallback(() =>
-  {
-    console.log(placedBets[0]);
-    contract.methods.playGame(placedBets[0], 12345)
+  const placeBets = useCallback(() => {
+    contract.methods
+      .playGame(placedBets[0], 12345)
       .send({ from: account, value: 10 });
-  },[placedBets]);
+  }, [account, contract.methods, placedBets]);
 
   return (
     <div>

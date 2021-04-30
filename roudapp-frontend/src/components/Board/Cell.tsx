@@ -164,7 +164,6 @@ const Cell: React.FC<Props> = ({
               e.preventDefault();
               setHoveredCells(createSequenceFrom(number.value, 3));
             }}
-            hasBet
             onDrop={onDropCallback}
           />
           <TwoRowDragzone
