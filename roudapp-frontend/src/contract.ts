@@ -1,47 +1,38 @@
 export const CONTRACT_ABI = [
   {
-    "anonymous": false,
-    "inputs": [
+    inputs: [
       {
-        "indexed": true,
-        "internalType": "address",
-        "name": "player",
-        "type": "address"
+        internalType: "address",
+        name: "_vrfCoordinator",
+        type: "address",
       },
       {
-        "indexed": true,
-        "internalType": "uint256",
-        "name": "value",
-        "type": "uint256"
-      }
+        internalType: "address",
+        name: "_link",
+        type: "address",
+      },
     ],
-    "name": "GameFinished",
-    "type": "event"
+    stateMutability: "nonpayable",
+    type: "constructor",
   },
   {
-    "inputs": [],
-    "name": "retrieve",
-    "outputs": [
+    inputs: [
       {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
+        internalType: "bytes32",
+        name: "requestId",
+        type: "bytes32",
+      },
+      {
+        internalType: "uint256",
+        name: "randomness",
+        type: "uint256",
+      },
     ],
-    "stateMutability": "view",
-    "type": "function"
+    name: "rawFulfillRandomness",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
   },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "num",
-        "type": "uint256"
-      }
-    ],
-    "name": "store",
-    "outputs": [],
-    "stateMutability": "payable",
-    "type": "function"
-  }
-]
+];
+
+export const CONTRACT_ADDRESS = "0x89e60f16d15fb8469414a7dbd3b829290a7e8c65";
