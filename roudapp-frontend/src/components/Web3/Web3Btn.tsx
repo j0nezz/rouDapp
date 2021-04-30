@@ -44,9 +44,9 @@ const Web3Btn: React.FC<Props> = ({ label }) => {
     // @ts-ignore
     const contract = new metamask.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
 
-    contract.methods
-      .store(parseInt(count))
-      .send({ from: accounts[0], value: 10 ** 15 });
+    /*    contract.methods
+      .playGame([12,14], 'asdfasdf')
+      .send({ from: accounts[0], value: 10 ** 15 });*/
   }, [count, metamask]);
 
   return (

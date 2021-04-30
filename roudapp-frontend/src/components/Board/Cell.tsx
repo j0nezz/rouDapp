@@ -1,5 +1,6 @@
 import React, { useCallback } from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
+import { __COLORS } from "../../theme/theme";
 import { COLOR, RouletteNumber } from "../../types/Roulette";
 
 const CIRCLE_SIZE = 50;
@@ -28,20 +29,34 @@ const StyledCell = styled.div<{ color: COLOR }>`
   font-weight: bold;
 `;
 
-const RowDragzone = styled.div`
+const HasBet = css`
+  &:before {
+    content: "";
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    background: ${__COLORS.SECONDARY};
+    opacity: 0.75;
+    border-radius: 50%;
+  }
+`;
+
+const DragzonBase = css`
   position: absolute;
   height: 60%;
   width: ${DRAGZONE_WIDTH}px;
-  left: ${-DRAGZONE_WIDTH / 2}px;
   top: 20%;
+`;
+
+const RowDragzone = styled.div<{ hasBet?: boolean }>`
+  ${DragzonBase};
+  left: ${-DRAGZONE_WIDTH / 2}px;
+  ${(p) => p.hasBet && HasBet};
   //outline: 5px solid orange;
 `;
 const RowDragzoneRight = styled.div`
-  position: absolute;
-  height: 60%;
-  width: ${DRAGZONE_WIDTH}px;
+  ${DragzonBase};
   right: ${-DRAGZONE_WIDTH / 2}px;
-  top: 20%;
 `;
 
 const TwoRowDragzone = styled.div`
@@ -74,7 +89,7 @@ const BetweenDragzoneColumns = styled.div`
 const BetweenDragzoneRows = styled.div`
   position: absolute;
   height: 40%;
-  width:  ${DRAGZONE_WIDTH * 3}px;
+  width: ${DRAGZONE_WIDTH * 3}px;
   bottom: ${-DRAGZONE_WIDTH / 2}px;
   //outline: 5px solid pink;\`
 `;
@@ -98,6 +113,7 @@ type Props = {
   number: RouletteNumber;
   setHoveredCells: (a: number[]) => void;
   hoveredCells: number[];
+  onDropCallback: () => void;
 };
 
 const createSequenceFrom = (n: number, length: number): number[] => {
@@ -114,7 +130,12 @@ const createVerticalSequenceFrom = (n: number, length: number): number[] => {
     .map((num, i) => (length > 0 ? num + 3 * i : num - 3 * i));
 };
 
-const Cell: React.FC<Props> = ({ number, hoveredCells, setHoveredCells }) => {
+const Cell: React.FC<Props> = ({
+  number,
+  hoveredCells,
+  setHoveredCells,
+  onDropCallback,
+}) => {
   const onClickEvent = useCallback(() => {
     console.log(number.value);
   }, [number.value]);
@@ -139,10 +160,13 @@ const Cell: React.FC<Props> = ({ number, hoveredCells, setHoveredCells }) => {
       {hasRowDragzone && (
         <>
           <RowDragzone
-            onDragOver={(e) =>
-              setHoveredCells(createSequenceFrom(number.value, 3))
-            }
+            onDragOver={(e) => {
+              e.preventDefault();
+              setHoveredCells(createSequenceFrom(number.value, 3));
+            }}
             onDragExit={(e) => setHoveredCells([])}
+            hasBet
+            onDrop={onDropCallback}
           />
           <TwoRowDragzone
             onDragOver={(e) =>
