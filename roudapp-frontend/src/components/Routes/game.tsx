@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import Bets from "../Bets";
 import Board from "../Board/Board";
 
 const Container = styled.div`
@@ -10,12 +11,13 @@ const Container = styled.div`
 `;
 
 const Game = () => {
+  // const [addedBets, setAddedBets] = useState<number[]>([]);
+
   return (
     <Container>
       <Board onDropCallback={(n) => alert(n)} />
-      {/*
-        <Bets bets={bets} updateBetAmount />
-*/}
+
+      <Bets />
     </Container>
   );
 };

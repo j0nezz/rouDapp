@@ -164,15 +164,15 @@ const Cell: React.FC<Props> = ({
               e.preventDefault();
               setHoveredCells(createSequenceFrom(number.value, 3));
             }}
-            onDragExit={(e) => setHoveredCells([])}
             hasBet
             onDrop={onDropCallback}
           />
           <TwoRowDragzone
-            onDragOver={(e) =>
-              setHoveredCells(createSequenceFrom(number.value, 6))
-            }
-            onDragExit={(e) => setHoveredCells([])}
+            onDragOver={(e) => {
+              e.preventDefault();
+              setHoveredCells(createSequenceFrom(number.value, 6));
+            }}
+            onDrop={onDropCallback}
           />
         </>
       )}
@@ -180,16 +180,18 @@ const Cell: React.FC<Props> = ({
       {hasRowDragzoneRight && (
         <>
           <RowDragzoneRight
-            onDragOver={(e) =>
-              setHoveredCells(createSequenceFrom(number.value, -3))
-            }
-            onDragExit={(e) => setHoveredCells([])}
+            onDragOver={(e) => {
+              e.preventDefault();
+              setHoveredCells(createSequenceFrom(number.value, -3));
+            }}
+            onDrop={onDropCallback}
           />
           <TwoRowDragzoneRight
-            onDragOver={(e) =>
-              setHoveredCells(createSequenceFrom(number.value, -6))
-            }
-            onDragExit={(e) => setHoveredCells([])}
+            onDragOver={(e) => {
+              e.preventDefault();
+              setHoveredCells(createSequenceFrom(number.value, -6));
+            }}
+            onDrop={onDropCallback}
           />
         </>
       )}
@@ -197,42 +199,54 @@ const Cell: React.FC<Props> = ({
       {hasBetweenDragzoneRight && (
         <>
           <BetweenDragzoneColumns
-            onDragOver={(e) =>
-              setHoveredCells(createSequenceFrom(number.value, 2))
-            }
+            onDragOver={(e) => {
+              e.preventDefault();
+              setHoveredCells(createSequenceFrom(number.value, 2));
+            }}
+            onDrop={onDropCallback}
           />
           <BottomRightCornerDragzone
-            onDragOver={(e) =>
+            onDragOver={(e) => {
+              e.preventDefault();
               setHoveredCells(
                 createSequenceFrom(number.value, 2).concat(
                   createSequenceFrom(number.value + 3, 2)
                 )
-              )
-            }
+              );
+            }}
+            onDrop={onDropCallback}
           />
         </>
       )}
 
       {hasBetweenDragzoneVertical && (
         <BetweenDragzoneRows
-          onDragOver={(e) =>
-            setHoveredCells(createVerticalSequenceFrom(number.value, 2))
-          }
+          onDragOver={(e) => {
+            e.preventDefault();
+            setHoveredCells(createVerticalSequenceFrom(number.value, 2));
+          }}
+          onDrop={onDropCallback}
         />
       )}
 
       {hasBetweenDragzoneBottom && (
         <BetweenDragzoneBottom
-          onDragOver={(e) =>
-            setHoveredCells(createVerticalSequenceFrom(number.value, -12))
-          }
+          onDragOver={(e) => {
+            e.preventDefault();
+            setHoveredCells(createVerticalSequenceFrom(number.value, -12));
+          }}
+          onDrop={onDropCallback}
         />
       )}
 
       <StyledCell
         onClick={onClickEvent}
         color={number.color}
-        onDragOver={(e) => setHoveredCells(createSequenceFrom(number.value, 1))}
+        onDragOver={(e) => {
+          e.preventDefault();
+          setHoveredCells(createSequenceFrom(number.value, 1));
+        }}
+        onDrop={onDropCallback}
       >
         {number.value}
       </StyledCell>

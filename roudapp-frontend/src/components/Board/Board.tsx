@@ -45,6 +45,7 @@ const Board: React.FC<Props> = ({ onDropCallback }) => {
 
   const onDropHandler = useCallback(() => {
     onDropCallback(hoveredCells);
+    setHoveredCells([]);
   }, [hoveredCells, onDropCallback]);
 
   return (
@@ -61,7 +62,11 @@ const Board: React.FC<Props> = ({ onDropCallback }) => {
         ))}
       </BoardWrapper>
       <ChipsWrapper>
-        <Chip draggable color={"#41426F"} />
+        <Chip
+          draggable
+          color={"#41426F"}
+          onDragEnd={() => setHoveredCells([])}
+        />
       </ChipsWrapper>
     </>
   );
