@@ -23,6 +23,7 @@ const Bets: React.FC<Props> = ({ placedBets }) => {
               })}
               ;
             </div>
+            <div>Place Amount for Bet</div>
             <input></input>
           </>
         );
