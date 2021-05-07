@@ -24,8 +24,7 @@ const Wrapper = styled.div<{ hover: boolean; column: string }>`
   }
 `;
 
-const Secondary = styled(Wrapper)`
-  grid-column: 2;
+const Secondary = styled(Wrapper).attrs({ column: "3" })`
   &:before {
     background: red;
   }
@@ -66,7 +65,14 @@ const ColorCell: React.FC<Props> = ({
         }}
         onDrop={onDropCallback}
       />
-      {/* <Secondary></Secondary> */}
+      <Secondary
+        hover={false}
+        onDragOver={(e) => {
+          e.preventDefault();
+          setHoveredCells(createColorSequence(COLOR.RED));
+        }}
+        onDrop={onDropCallback}
+      />
     </>
   );
 };

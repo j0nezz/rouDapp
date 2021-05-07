@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { __COLORS } from "../../theme/theme";
+import { SPACING, __COLORS } from "../../theme/theme";
 
 export const PopupWrapper = styled.div`
   width: min(100%, 500px);
@@ -10,4 +10,5 @@ export const PopupWrapper = styled.div`
   display: flex;
   align-items: center;
   flex-direction: column;
+  padding: ${SPACING}px;
 `;

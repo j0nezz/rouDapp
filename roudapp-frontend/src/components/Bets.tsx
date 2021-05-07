@@ -54,13 +54,13 @@ const BoldSubTitle = styled.div`
 const Bets: React.FC<Props> = ({ placedBets }) => {
   const { contract, account } = useWeb3Context();
   const { setPopup } = usePopupContext();
-  const [amount, setAmount] = useState("0.01");
+  const [amount, setAmount] = useState("0.1");
 
   const placeBets = useCallback(() => {
     const value = parseFloat(amount) * 10 ** 18;
     if (placedBets.length > 0 && !isNaN(value)) {
       contract.methods
-        .playGame(placedBets, 12345)
+        .playGame(placedBets)
         .send({ from: account, value }, (err: any, transactionHash: string) => {
           if (!err) {
             setPopup(<ResultPopup bet={placedBets} tx={transactionHash} />);

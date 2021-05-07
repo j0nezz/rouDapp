@@ -1,4 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
+import styled from "styled-components";
+import { SPACING } from "../../theme/theme";
 import { Subtitle, Title } from "../../theme/typography";
 import { Button } from "../Button";
 import { usePopupContext } from "../context/PopupContext";
@@ -9,12 +11,19 @@ import { PopupWrapper } from "./common";
 type Result = {
   success: boolean;
   number: string;
+  winningSum?: string;
 };
 
 type Props = {
   bet: number[];
   tx: string;
 };
+
+const Amount = styled(Title)`
+  font-size: 2em;
+  margin: ${SPACING}px 0;
+`;
+
 const ResultPopup: React.FC<Props> = ({ bet }) => {
   const [result, setResult] = useState<Result | null>(null);
   const { contract, account } = useWeb3Context();
@@ -28,7 +37,11 @@ const ResultPopup: React.FC<Props> = ({ bet }) => {
   const onSuccess = useCallback((data: any, error: any) => {
     if (error) alert(error);
     console.log("onSuccess", { data, error });
-    setResult({ success: true, number: data?.returnValues?.result });
+    setResult({
+      success: true,
+      number: data?.returnValues?.result,
+      winningSum: data?.returnValues?.winningSum,
+    });
   }, []);
 
   useEffect(() => {
@@ -55,7 +68,12 @@ const ResultPopup: React.FC<Props> = ({ bet }) => {
     <PopupWrapper>
       <Title>{result.success ? "Success!" : "Oh snap!"}</Title>
       <Subtitle>You betted on {bet.join(",")} </Subtitle>
-      <Subtitle>The ball landed on {result.number}</Subtitle>
+      <Subtitle>
+        The ball landed on <b>{result.number}</b>
+      </Subtitle>
+      {result.winningSum && (
+        <Amount>You won ETH {parseFloat(result.winningSum) * 10 ** 18}</Amount>
+      )}
       <Button onClick={clearPopup}>New game</Button>
     </PopupWrapper>
   );
