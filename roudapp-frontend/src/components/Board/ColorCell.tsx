@@ -1,0 +1,74 @@
+import React from "react";
+import styled from "styled-components";
+import { __COLORS } from "../../theme/theme";
+import { COLOR, RouletteNumbers } from "../../types/Roulette";
+
+const Wrapper = styled.div<{ hover: boolean; column: string }>`
+  position: relative;
+  background: ${(p) => (p.hover ? __COLORS.SECONDARY : __COLORS.PRIMARY)};
+  grid-column: ${(p) => p.column};
+  grid-row: 6/10;
+  width: 100%;
+  border: 1px solid red;
+
+  height: 100%;
+  &:before {
+    content: "";
+    width: 55px;
+    height: 55px;
+    left: 50%;
+    top: 50%;
+    background: black;
+    transform: translate(-50%, -50%) rotate(45deg);
+    position: absolute;
+  }
+`;
+
+const Secondary = styled(Wrapper)`
+  grid-column: 2;
+  &:before {
+    background: red;
+  }
+`;
+
+const createColorSequence = (color: COLOR): number[] => {
+  let result: Array<number> = new Array();
+  RouletteNumbers.forEach((n) => {
+    // console.log(n);
+    if (n.color == color) {
+      result.push(n.value);
+    }
+  });
+  return result;
+};
+
+type Props = {
+  column: string;
+  setHoveredCells: (a: number[]) => void;
+  hoveredCells: number[];
+  onDropCallback: () => void;
+};
+
+const ColorCell: React.FC<Props> = ({
+  column,
+  setHoveredCells,
+  hoveredCells,
+  onDropCallback,
+}) => {
+  return (
+    <>
+      <Wrapper
+        hover={false}
+        column={column}
+        onDragOver={(e) => {
+          e.preventDefault();
+          setHoveredCells(createColorSequence(COLOR.BLACK));
+        }}
+        onDrop={onDropCallback}
+      />
+      {/* <Secondary></Secondary> */}
+    </>
+  );
+};
+
+export default ColorCell;

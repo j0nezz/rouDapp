@@ -2,8 +2,10 @@ import { lighten } from "polished";
 import React, { useCallback, useState } from "react";
 import styled from "styled-components";
 import { RouletteNumbers } from "../../types/Roulette";
-import Black from "./Black";
 import Cell from "./Cell";
+import ColorCell from "./ColorCell";
+import EvenOddCell from "./EvenOddCell";
+import UpperLowerCell from "./UpperLowerCell";
 
 const ChipsWrapper = styled.div`
   flex: 1;
@@ -72,7 +74,24 @@ const Board: React.FC<Props> = ({ onDropCallback }) => {
             />
           ))}
         </NumbersWrapper>
-        <Black />
+        <EvenOddCell
+          setHoveredCells={setHoveredCells}
+          hoveredCells={hoveredCells}
+          onDropCallback={onDropHandler}
+          column={"2"}
+        ></EvenOddCell>
+        <ColorCell
+          setHoveredCells={setHoveredCells}
+          hoveredCells={hoveredCells}
+          onDropCallback={onDropHandler}
+          column={"2"}
+        ></ColorCell>
+        <UpperLowerCell
+          setHoveredCells={setHoveredCells}
+          hoveredCells={hoveredCells}
+          onDropCallback={onDropHandler}
+          column={"2"}
+        ></UpperLowerCell>
       </BoardWrapper>
 
       <ChipsWrapper>
