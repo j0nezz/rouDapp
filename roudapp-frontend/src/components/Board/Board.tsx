@@ -4,6 +4,9 @@ import styled from "styled-components";
 import { SPACING } from "../../theme/theme";
 import { RouletteNumbers } from "../../types/Roulette";
 import Cell from "./Cell";
+import ColorCell from "./ColorCell";
+import EvenOddCell from "./EvenOddCell";
+import UpperLowerCell from "./UpperLowerCell";
 import Zero from "./Zero";
 
 const ChipsWrapper = styled.div`
@@ -71,6 +74,24 @@ const Board: React.FC<Props> = ({ onDropCallback }) => {
             />
           ))}
         </NumbersWrapper>
+        <EvenOddCell
+          setHoveredCells={setHoveredCells}
+          hoveredCells={hoveredCells}
+          onDropCallback={onDropHandler}
+          column={"2"}
+        />
+        <ColorCell
+          setHoveredCells={setHoveredCells}
+          hoveredCells={hoveredCells}
+          onDropCallback={onDropHandler}
+          column={"2"}
+        />
+        <UpperLowerCell
+          setHoveredCells={setHoveredCells}
+          hoveredCells={hoveredCells}
+          onDropCallback={onDropHandler}
+          column={"2"}
+        />
         <ChipsWrapper>
           <Chip
             draggable
