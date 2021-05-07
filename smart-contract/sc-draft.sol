@@ -110,10 +110,10 @@ contract Roulette is VRFConsumerBase {
         for(uint8 i=0; i<bets[requestId].numbers.length; i++){
             if(requestedNumber == bets[requestId].numbers[i]){
                 // Transfer ether to winner 
-                bets[requestId].sender.transfer(SafeMath.mul(SafeMath.div(bets[requestId].amount, 36), bets[requestId].numbers.length));
+                bets[requestId].sender.transfer(SafeMath.div(SafeMath.mul(bets[requestId].amount, 36), bets[requestId].numbers.length));
                 
                 // Emit win event
-                emit Win(requestedNumber, SafeMath.mul(SafeMath.div(bets[requestId].amount, 36), bets[requestId].numbers.length), bets[requestId].sender);
+                emit Win(requestedNumber, SafeMath.div(SafeMath.mul(bets[requestId].amount, 36), bets[requestId].numbers.length), bets[requestId].sender);
                 return;
             } 
         }
