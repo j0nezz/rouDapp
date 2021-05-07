@@ -1,6 +1,7 @@
 import { lighten } from "polished";
 import React, { useCallback, useState } from "react";
 import styled from "styled-components";
+import { SPACING } from "../../theme/theme";
 import { RouletteNumbers } from "../../types/Roulette";
 import Black from "./Black";
 import Cell from "./Cell";
@@ -33,6 +34,7 @@ const NumbersWrapper = styled.div`
 `;
 
 const BoardWrapper = styled.div`
+  margin-top: ${SPACING}px;
   flex: 2;
   max-width: 600px;
   display: grid;

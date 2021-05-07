@@ -20,13 +20,14 @@ type Props = {
 const Wrapper = styled.div`
   margin-top: ${SPACING * 8}px;
   flex: 1;
-  max-width: 300px;
 `;
 
 const Box = styled.div`
   width: 100%;
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.25);
   padding: ${SPACING}px;
+  max-width: 300px;
+  margin-left: auto;
 `;
 const BetTitle = styled(Title)`
   font-size: 2em;
@@ -61,7 +62,9 @@ const Bets: React.FC<Props> = ({ placedBets }) => {
       contract.methods
         .playGame(placedBets, 12345)
         .send({ from: account, value }, (err: any, transactionHash: string) => {
-          setPopup(<ResultPopup bet={placedBets} tx={transactionHash} />);
+          if (!err) {
+            setPopup(<ResultPopup bet={placedBets} tx={transactionHash} />);
+          }
         });
     }
   }, [account, amount, contract.methods, placedBets, setPopup]);
@@ -70,7 +73,6 @@ const Bets: React.FC<Props> = ({ placedBets }) => {
     <Wrapper>
       <Box>
         <BetTitle>Bets</BetTitle>
-
         {placedBets.length === 0 ? (
           <div>Drag the chip to place a bet </div>
         ) : (
