@@ -19,6 +19,10 @@ const Secondary = styled(Wrapper).attrs({ column: "3" })`
   }
 `;
 
+const Label = styled.div<{}>`
+  color: red;
+`;
+
 const createEvenOddSequence = (even: boolean): number[] => {
   let result: Array<number> = new Array();
   RouletteNumbers.forEach((n) => {
@@ -60,7 +64,9 @@ const EvenOddCell: React.FC<Props> = ({
           setHoveredCells(createEvenOddSequence(true));
         }}
         onDrop={onDropCallback}
-      />
+      >
+        <Label>Even</Label>
+      </Wrapper>
       <Secondary
         hover={false}
         onDragOver={(e) => {
@@ -68,7 +74,9 @@ const EvenOddCell: React.FC<Props> = ({
           setHoveredCells(createEvenOddSequence(false));
         }}
         onDrop={onDropCallback}
-      />{" "}
+      >
+        <Label>Odd</Label>
+      </Secondary>
     </>
   );
 };
