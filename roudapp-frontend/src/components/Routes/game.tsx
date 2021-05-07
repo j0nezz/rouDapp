@@ -16,7 +16,7 @@ const Game = () => {
 
   return (
     <Container>
-      <Board onDropCallback={(n) => setAddedBets(n)} />
+      <Board onDropCallback={(n) => setAddedBets(n)} addedBets={addedBets} />
       <Bets placedBets={addedBets} />
     </Container>
   );

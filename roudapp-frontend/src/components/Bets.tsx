@@ -78,7 +78,7 @@ const Bets: React.FC<Props> = ({ placedBets }) => {
         ) : (
           <>
             <BoldSubTitle>Your numbers</BoldSubTitle>
-            <div>{placedBets.join(",")}</div>
+            <div>{placedBets.join(", ")}</div>
             <BoldSubTitle>Place Amount for Bet (ETH)</BoldSubTitle>
             <StyledInput
               type={"number"}

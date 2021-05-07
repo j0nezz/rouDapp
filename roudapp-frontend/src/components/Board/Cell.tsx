@@ -6,14 +6,19 @@ import { COLOR, RouletteNumber } from "../../types/Roulette";
 const CIRCLE_SIZE = 50;
 const DRAGZONE_WIDTH = 30;
 
-const CellWrapper = styled.div<{ hover: boolean }>`
+const CellWrapper = styled.div<{ hover: boolean; hasBet: boolean }>`
   position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 10px;
   border: 1px solid rgba(255, 255, 255, 0.3);
-  background: ${(p) => (p.hover ? "rgba(255,255,255,0.3)" : "none")};
+  background: ${(p) =>
+    p.hover
+      ? "rgba(255,255,255,0.2)"
+      : p.hasBet
+      ? "rgba(9,205,0,0.42)"
+      : "none"};
 `;
 
 const StyledCell = styled.div<{ color: COLOR }>`
@@ -114,6 +119,7 @@ type Props = {
   setHoveredCells: (a: number[]) => void;
   hoveredCells: number[];
   onDropCallback: () => void;
+  addedBets: number[];
 };
 
 const createSequenceFrom = (n: number, length: number): number[] => {
@@ -135,6 +141,7 @@ const Cell: React.FC<Props> = ({
   hoveredCells,
   setHoveredCells,
   onDropCallback,
+  addedBets,
 }) => {
   const onClickEvent = useCallback(() => {
     console.log(number.value);
@@ -156,7 +163,10 @@ const Cell: React.FC<Props> = ({
     number.value >= 34;
 
   return (
-    <CellWrapper hover={hoveredCells.includes(number.value)}>
+    <CellWrapper
+      hover={hoveredCells.includes(number.value)}
+      hasBet={addedBets.includes(number.value)}
+    >
       {hasRowDragzone && (
         <>
           <RowDragzone

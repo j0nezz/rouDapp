@@ -1,6 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-import { __COLORS } from "../../theme/theme";
 import { RouletteNumber } from "../../types/Roulette";
 
 const ZeroWrapper = styled.div<{ hover: boolean }>`
@@ -26,15 +25,16 @@ const Zero: React.FC<Props> = ({
   hoveredCells,
   setHoveredCells,
   onDropCallback,
-})=> {
+}) => {
   return (
     <>
-      <ZeroWrapper hover={hoveredCells.includes(0)}
-                onDragOver={(e) => {
-                  e.preventDefault();
-                  setHoveredCells([0]);
-                }}
-                onDrop={onDropCallback}
+      <ZeroWrapper
+        hover={hoveredCells.includes(0)}
+        onDragOver={(e) => {
+          e.preventDefault();
+          setHoveredCells([0]);
+        }}
+        onDrop={onDropCallback}
       >
         {number.value}
       </ZeroWrapper>

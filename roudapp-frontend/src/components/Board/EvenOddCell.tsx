@@ -24,17 +24,17 @@ const Label = styled.div<{}>`
 `;
 
 const createEvenOddSequence = (even: boolean): number[] => {
-  let result: Array<number> = new Array();
+  let result: number[] = [];
   RouletteNumbers.forEach((n) => {
     // console.log(n);
     if (even) {
-      if (n.value % 2 == 0) {
+      if (n.value % 2 === 0) {
         if (n.value === 0) {
         } else {
           result.push(n.value);
         }
       }
-    } else if (Math.abs(n.value % 2) == 1) {
+    } else if (Math.abs(n.value % 2) === 1) {
       result.push(n.value);
     }
   });

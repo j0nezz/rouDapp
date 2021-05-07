@@ -24,7 +24,7 @@ const Label = styled.div<{}>`
 `;
 
 const createUpperLowerSequence = (upper: boolean): number[] => {
-  let result: Array<number> = new Array();
+  let result: number[] = [];
   RouletteNumbers.forEach((n) => {
     // console.log(n);
     if (upper) {

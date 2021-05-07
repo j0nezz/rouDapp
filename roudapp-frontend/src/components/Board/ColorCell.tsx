@@ -31,10 +31,10 @@ const Secondary = styled(Wrapper).attrs({ column: "3" })`
 `;
 
 const createColorSequence = (color: COLOR): number[] => {
-  let result: Array<number> = new Array();
+  let result: number[] = [];
   RouletteNumbers.forEach((n) => {
     // console.log(n);
-    if (n.color == color) {
+    if (n.color === color) {
       result.push(n.value);
     }
   });

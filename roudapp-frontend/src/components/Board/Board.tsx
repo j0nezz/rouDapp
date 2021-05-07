@@ -46,8 +46,9 @@ const BoardWrapper = styled.div`
 
 type Props = {
   onDropCallback: (n: number[]) => void;
+  addedBets: number[];
 };
-const Board: React.FC<Props> = ({ onDropCallback }) => {
+const Board: React.FC<Props> = ({ onDropCallback, addedBets }) => {
   const [hoveredCells, setHoveredCells] = useState<number[]>([]);
 
   const onDropHandler = useCallback(() => {
@@ -71,6 +72,7 @@ const Board: React.FC<Props> = ({ onDropCallback }) => {
               setHoveredCells={setHoveredCells}
               hoveredCells={hoveredCells}
               onDropCallback={onDropHandler}
+              addedBets={addedBets}
             />
           ))}
         </NumbersWrapper>

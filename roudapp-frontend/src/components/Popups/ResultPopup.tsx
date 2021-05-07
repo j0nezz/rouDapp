@@ -72,7 +72,7 @@ const ResultPopup: React.FC<Props> = ({ bet }) => {
         The ball landed on <b>{result.number}</b>
       </Subtitle>
       {result.winningSum && (
-        <Amount>You won ETH {parseFloat(result.winningSum) * 10 ** 18}</Amount>
+        <Amount>You won ETH {parseFloat(result.winningSum) / 10 ** 18}</Amount>
       )}
       <Button onClick={clearPopup}>New game</Button>
     </PopupWrapper>
