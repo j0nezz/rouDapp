@@ -1,14 +1,14 @@
 import { lighten } from "polished";
 import React, { useCallback, useState } from "react";
 import styled from "styled-components";
+import { SPACING } from "../../theme/theme";
 import { RouletteNumbers } from "../../types/Roulette";
 import Cell from "./Cell";
-import ColorCell from "./ColorCell";
-import EvenOddCell from "./EvenOddCell";
-import UpperLowerCell from "./UpperLowerCell";
+import Zero from "./Zero";
 
 const ChipsWrapper = styled.div`
-  flex: 1;
+  grid-column: 3;
+  grid-row: 1;
 `;
 
 const CHIP_SIZE = 30;
@@ -33,20 +33,12 @@ const NumbersWrapper = styled.div`
 `;
 
 const BoardWrapper = styled.div`
-  width: 50%;
+  margin-top: ${SPACING}px;
+  flex: 2;
+  max-width: 600px;
   display: grid;
   grid-template-columns: auto 80px 80px;
   grid-auto-rows: minmax(60px, auto);
-`;
-
-const ZeroNumber = styled.div`
-  grid-column: 1/4;
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
-  font-size: 30px;
-  font-weight: bold;
-  padding-bottom: 10px;
 `;
 
 type Props = {
@@ -64,7 +56,12 @@ const Board: React.FC<Props> = ({ onDropCallback }) => {
     <>
       <BoardWrapper>
         <NumbersWrapper>
-          <ZeroNumber>0</ZeroNumber>
+          <Zero
+            number={RouletteNumbers[0]}
+            setHoveredCells={setHoveredCells}
+            hoveredCells={hoveredCells}
+            onDropCallback={onDropHandler}
+          />
           {RouletteNumbers.slice(1).map((num) => (
             <Cell
               number={num}
@@ -74,33 +71,14 @@ const Board: React.FC<Props> = ({ onDropCallback }) => {
             />
           ))}
         </NumbersWrapper>
-        <EvenOddCell
-          setHoveredCells={setHoveredCells}
-          hoveredCells={hoveredCells}
-          onDropCallback={onDropHandler}
-          column={"2"}
-        ></EvenOddCell>
-        <ColorCell
-          setHoveredCells={setHoveredCells}
-          hoveredCells={hoveredCells}
-          onDropCallback={onDropHandler}
-          column={"2"}
-        ></ColorCell>
-        <UpperLowerCell
-          setHoveredCells={setHoveredCells}
-          hoveredCells={hoveredCells}
-          onDropCallback={onDropHandler}
-          column={"2"}
-        ></UpperLowerCell>
+        <ChipsWrapper>
+          <Chip
+            draggable
+            color={"#41426F"}
+            onDragEnd={() => setHoveredCells([])}
+          />
+        </ChipsWrapper>
       </BoardWrapper>
-
-      <ChipsWrapper>
-        <Chip
-          draggable
-          color={"#41426F"}
-          onDragEnd={() => setHoveredCells([])}
-        />
-      </ChipsWrapper>
     </>
   );
 };
