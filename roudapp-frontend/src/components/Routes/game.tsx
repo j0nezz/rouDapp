@@ -8,15 +8,15 @@ const Container = styled.div`
   margin: auto;
   width: 100%;
   display: flex;
+  justify-content: space-between;
 `;
 
 const Game = () => {
-  const [addedBets, setAddedBets] = useState<Array<Array<number>>>([]);
+  const [addedBets, setAddedBets] = useState<number[]>([]);
 
   return (
     <Container>
-      <Board onDropCallback={(n) => setAddedBets([...addedBets, n])} />
-
+      <Board onDropCallback={(n) => setAddedBets(n)} />
       <Bets placedBets={addedBets} />
     </Container>
   );

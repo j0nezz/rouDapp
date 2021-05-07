@@ -7,7 +7,8 @@ import Cell from "./Cell";
 import Zero from "./Zero";
 
 const ChipsWrapper = styled.div`
-  flex: 1;
+  grid-column: 3;
+  grid-row: 1;
 `;
 
 const CHIP_SIZE = 30;
@@ -32,7 +33,8 @@ const NumbersWrapper = styled.div`
 `;
 
 const BoardWrapper = styled.div`
-  width: 50%;
+  flex: 2;
+  max-width: 600px;
   display: grid;
   grid-template-columns: auto 80px 80px;
   grid-auto-rows: minmax(60px, auto);
@@ -69,15 +71,14 @@ const Board: React.FC<Props> = ({ onDropCallback }) => {
           ))}
         </NumbersWrapper>
         <Black />
+        <ChipsWrapper>
+          <Chip
+            draggable
+            color={"#41426F"}
+            onDragEnd={() => setHoveredCells([])}
+          />
+        </ChipsWrapper>
       </BoardWrapper>
-
-      <ChipsWrapper>
-        <Chip
-          draggable
-          color={"#41426F"}
-          onDragEnd={() => setHoveredCells([])}
-        />
-      </ChipsWrapper>
     </>
   );
 };
