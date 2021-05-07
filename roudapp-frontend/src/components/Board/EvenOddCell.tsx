@@ -13,8 +13,10 @@ const Wrapper = styled.div<{ hover: boolean; column: string }>`
   border: 1px solid red;
 `;
 
-const Secondary = styled(Wrapper)`
-  grid-column: 2;
+const Secondary = styled(Wrapper).attrs({ column: "3" })`
+  &:before {
+    background: red;
+  }
 `;
 
 const createEvenOddSequence = (even: boolean): number[] => {
@@ -23,7 +25,10 @@ const createEvenOddSequence = (even: boolean): number[] => {
     // console.log(n);
     if (even) {
       if (n.value % 2 == 0) {
-        result.push(n.value);
+        if (n.value === 0) {
+        } else {
+          result.push(n.value);
+        }
       }
     } else if (Math.abs(n.value % 2) == 1) {
       result.push(n.value);
@@ -56,7 +61,14 @@ const EvenOddCell: React.FC<Props> = ({
         }}
         onDrop={onDropCallback}
       />
-      {/* <Secondary></Secondary> */}
+      <Secondary
+        hover={false}
+        onDragOver={(e) => {
+          e.preventDefault();
+          setHoveredCells(createEvenOddSequence(false));
+        }}
+        onDrop={onDropCallback}
+      />{" "}
     </>
   );
 };

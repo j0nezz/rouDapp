@@ -13,8 +13,10 @@ const Wrapper = styled.div<{ hover: boolean; column: string }>`
   border: 1px solid red;
 `;
 
-const Secondary = styled(Wrapper)`
-  grid-column: 2;
+const Secondary = styled(Wrapper).attrs({ column: "3" })`
+  &:before {
+    background: red;
+  }
 `;
 
 const createUpperLowerSequence = (upper: boolean): number[] => {
@@ -26,7 +28,10 @@ const createUpperLowerSequence = (upper: boolean): number[] => {
         result.push(n.value);
       }
     } else if (n.value <= 18) {
-      result.push(n.value);
+      if (n.value === 0) {
+      } else {
+        result.push(n.value);
+      }
     }
   });
   return result;
@@ -56,7 +61,14 @@ const UpperLowerCell: React.FC<Props> = ({
         }}
         onDrop={onDropCallback}
       />
-      {/* <Secondary></Secondary> */}
+      <Secondary
+        hover={false}
+        onDragOver={(e) => {
+          e.preventDefault();
+          setHoveredCells(createUpperLowerSequence(false));
+        }}
+        onDrop={onDropCallback}
+      />{" "}
     </>
   );
 };
