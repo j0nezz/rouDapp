@@ -2,6 +2,7 @@ import { lighten } from "polished";
 import React, { useCallback, useState } from "react";
 import styled from "styled-components";
 import { RouletteNumbers } from "../../types/Roulette";
+import Black from "./Black";
 import Cell from "./Cell";
 
 const ChipsWrapper = styled.div`
@@ -16,15 +17,24 @@ const Chip = styled.div<{ color: string }>`
   background: ${(p) => lighten(0.3, p.color)};
   border-radius: 50%;
 `;
-const BoardWrapper = styled.div`
+const NumbersWrapper = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-auto-rows: minmax(60px, auto);
-  width: 50%;
+  width: 100%;
   margin: auto;
   background-color: darkgreen;
   color: white;
   flex: 2;
+  grid-column: 1;
+  grid-row: 1/14;
+`;
+
+const BoardWrapper = styled.div`
+  width: 50%;
+  display: grid;
+  grid-template-columns: auto 80px 80px;
+  grid-auto-rows: minmax(60px, auto);
 `;
 
 const ZeroNumber = styled.div`
@@ -51,16 +61,20 @@ const Board: React.FC<Props> = ({ onDropCallback }) => {
   return (
     <>
       <BoardWrapper>
-        <ZeroNumber>0</ZeroNumber>
-        {RouletteNumbers.slice(1).map((num) => (
-          <Cell
-            number={num}
-            setHoveredCells={setHoveredCells}
-            hoveredCells={hoveredCells}
-            onDropCallback={onDropHandler}
-          />
-        ))}
+        <NumbersWrapper>
+          <ZeroNumber>0</ZeroNumber>
+          {RouletteNumbers.slice(1).map((num) => (
+            <Cell
+              number={num}
+              setHoveredCells={setHoveredCells}
+              hoveredCells={hoveredCells}
+              onDropCallback={onDropHandler}
+            />
+          ))}
+        </NumbersWrapper>
+        <Black />
       </BoardWrapper>
+
       <ChipsWrapper>
         <Chip
           draggable
