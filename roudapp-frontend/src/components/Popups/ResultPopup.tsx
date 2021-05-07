@@ -28,21 +28,29 @@ const ResultPopup: React.FC<Props> = ({ bet }) => {
   const [result, setResult] = useState<Result | null>(null);
   const { contract, account } = useWeb3Context();
   const { clearPopup } = usePopupContext();
-  const onLoose = useCallback((data: any, error: any) => {
-    if (error) alert(error);
-    console.log("onLoose", { data, error });
-    setResult({ success: false, number: data?.returnValues?.result });
-  }, []);
+  const onLoose = useCallback(
+    (data: any, error: any) => {
+      if (data?.returnValues?.player !== account) return;
+      if (error) alert(error);
+      console.log("onLoose", { data, error });
+      setResult({ success: false, number: data?.returnValues?.result });
+    },
+    [account]
+  );
 
-  const onSuccess = useCallback((data: any, error: any) => {
-    if (error) alert(error);
-    console.log("onSuccess", { data, error });
-    setResult({
-      success: true,
-      number: data?.returnValues?.result,
-      winningSum: data?.returnValues?.winningSum,
-    });
-  }, []);
+  const onSuccess = useCallback(
+    (data: any, error: any) => {
+      if (data?.returnValues?.player !== account) return;
+      if (error) alert(error);
+      console.log("onSuccess", { data, error });
+      setResult({
+        success: true,
+        number: data?.returnValues?.result,
+        winningSum: data?.returnValues?.winningSum,
+      });
+    },
+    [account]
+  );
 
   useEffect(() => {
     contract.events.Loose(
