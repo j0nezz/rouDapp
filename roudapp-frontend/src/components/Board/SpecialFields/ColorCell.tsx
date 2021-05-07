@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
-import { __COLORS } from "../../theme/theme";
-import { COLOR, RouletteNumbers } from "../../types/Roulette";
+import { __COLORS } from "../../../theme/theme";
+import { COLOR, RouletteNumbers } from "../../../types/Roulette";
 
 const Wrapper = styled.div<{ hover: boolean; column: string }>`
   position: relative;
@@ -9,8 +9,7 @@ const Wrapper = styled.div<{ hover: boolean; column: string }>`
   grid-column: ${(p) => p.column};
   grid-row: 6/10;
   width: 100%;
-  border: 1px solid red;
-
+  border: 1px solid rgba(255, 255, 255, 0.3);
   height: 100%;
   &:before {
     content: "";
@@ -44,14 +43,12 @@ const createColorSequence = (color: COLOR): number[] => {
 type Props = {
   column: string;
   setHoveredCells: (a: number[]) => void;
-  hoveredCells: number[];
   onDropCallback: () => void;
 };
 
 const ColorCell: React.FC<Props> = ({
   column,
   setHoveredCells,
-  hoveredCells,
   onDropCallback,
 }) => {
   return (

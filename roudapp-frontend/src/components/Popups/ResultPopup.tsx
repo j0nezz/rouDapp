@@ -75,7 +75,7 @@ const ResultPopup: React.FC<Props> = ({ bet }) => {
   return (
     <PopupWrapper>
       <Title>{result.success ? "Success!" : "Oh snap!"}</Title>
-      <Subtitle>You betted on {bet.join(",")} </Subtitle>
+      <Subtitle>You betted on {bet.join(", ")} </Subtitle>
       <Subtitle>
         The ball landed on <b>{result.number}</b>
       </Subtitle>

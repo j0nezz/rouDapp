@@ -32,6 +32,7 @@ const Box = styled.div`
 const BetTitle = styled(Title)`
   font-size: 2em;
   max-width: 200px;
+  text-align: left;
 `;
 
 const StyledInput = styled.input`
@@ -87,7 +88,7 @@ const Bets: React.FC<Props> = ({ placedBets }) => {
             />
 
             <Button onClick={placeBets} disabled={placedBets.length < 1}>
-              Place Bet
+              Play Game
             </Button>
           </>
         )}

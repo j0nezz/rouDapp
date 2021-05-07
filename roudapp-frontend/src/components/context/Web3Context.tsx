@@ -7,10 +7,6 @@ import {
 } from "react";
 import Web3 from "web3";
 import { CONTRACT_ABI, CONTRACT_ADDRESS } from "../../contract";
-import {
-  hasPreviouslyConnectedWallet,
-  setHasPreviouslyConnectedWallet,
-} from "../helpers/hasPreviouslyConnectedWallet";
 
 type Web3ContextType = {
   metamask: Web3 | null;
@@ -37,19 +33,43 @@ export const Web3ContextProvider: React.FC = ({ children }) => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
 
-  const connectWallet = useCallback(() => {
+  const loadExistingSession = useCallback(async () => {
     if ((window as any).ethereum) {
       setLoading(true);
       // @ts-ignore
-      setMetamask(new Web3(window.ethereum));
-      try {
-        // @ts-ignore
-        window.ethereum.enable();
-        setHasPreviouslyConnectedWallet();
-      } catch (e) {
+      const web3 = new Web3(window.ethereum);
+      const accountResponse = await web3.eth.getAccounts();
+      if (accountResponse.length > 0) {
+        setAccount(accountResponse[0]);
+        setMetamask(web3);
+      } else {
         setLoading(false);
-        console.log("could not enable ethereum");
       }
+    } else {
+      setLoading(false);
+    }
+  }, []);
+
+  const connectWallet = useCallback(async () => {
+    if ((window as any).ethereum) {
+      setLoading(true);
+      // @ts-ignore
+      const web3 = new Web3(window.ethereum);
+      const accountResponse = await web3.eth.getAccounts();
+      if (accountResponse.length === 0) {
+        try {
+          // @ts-ignore
+          await window.ethereum.enable();
+          const accountResponse = await web3.eth.getAccounts();
+          setAccount(accountResponse[0]);
+        } catch (e) {
+          setLoading(false);
+          console.log("could not enable ethereum");
+        }
+      } else {
+        setAccount(accountResponse[0]);
+      }
+      setMetamask(web3);
     } else {
       setError("No Provider found.");
       setLoading(false);
@@ -58,16 +78,11 @@ export const Web3ContextProvider: React.FC = ({ children }) => {
 
   const initializeContract = useCallback(async () => {
     if (!metamask) return;
-    const accountResponse = await metamask.eth.getAccounts();
-    if (accountResponse.length === 0) {
-      console.log("No account selected");
-      return;
-    }
     // @ts-ignore
     setContract(new metamask.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS));
-    setAccount(accountResponse[0]);
+    setAccount(account);
     setLoading(false);
-  }, [metamask]);
+  }, [account, metamask]);
 
   useEffect(() => {
     if (metamask) {
@@ -76,11 +91,8 @@ export const Web3ContextProvider: React.FC = ({ children }) => {
   }, [initializeContract, metamask]);
 
   useEffect(() => {
-    if (hasPreviouslyConnectedWallet()) {
-      // show spinner so that it doesn't appears to flicker
-      setTimeout(connectWallet, 500);
-    }
-  }, [connectWallet]);
+    loadExistingSession();
+  }, [loadExistingSession]);
 
   return (
     <Web3Context.Provider
