@@ -4,6 +4,9 @@ import "@chainlink/contracts/src/v0.6/VRFConsumerBase.sol";
 import "@openzeppelin/contracts-ethereum-package/contracts/math/SafeMath.sol";
 
 contract Roulette is VRFConsumerBase {
+    // TODO create field variable 'lockedAmount'
+    // TODO uncomment 'require(msg.value >= minimumStake, "Below minimum stake!");' in playGame
+    
     // custom defined types to group several variables
     struct Bet { 
            uint256 amount;
@@ -60,7 +63,7 @@ contract Roulette is VRFConsumerBase {
         require(LINK.balanceOf(address(this)) >= fee, "Not enough LINK - fill contract with faucet");
         
         // Show error in case stake is below minumum stake
-        require(msg.value >= minimumStake, "Below minimum stake!");
+        // require(msg.value >= minimumStake, "Below minimum stake!");
         
         // Show error in case SC owns not enough money for possible payout
         require(address(this).balance >= SafeMath.mul(msg.value , SafeMath.div(36,numbers.length)), "Not enough money available on SC");
