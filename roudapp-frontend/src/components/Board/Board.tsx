@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { RouletteNumbers } from "../../types/Roulette";
 import Black from "./Black";
 import Cell from "./Cell";
+import Zero from "./Zero";
 
 const ChipsWrapper = styled.div`
   flex: 1;
@@ -37,16 +38,6 @@ const BoardWrapper = styled.div`
   grid-auto-rows: minmax(60px, auto);
 `;
 
-const ZeroNumber = styled.div`
-  grid-column: 1/4;
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
-  font-size: 30px;
-  font-weight: bold;
-  padding-bottom: 10px;
-`;
-
 type Props = {
   onDropCallback: (n: number[]) => void;
 };
@@ -62,7 +53,12 @@ const Board: React.FC<Props> = ({ onDropCallback }) => {
     <>
       <BoardWrapper>
         <NumbersWrapper>
-          <ZeroNumber>0</ZeroNumber>
+          <Zero
+            number={RouletteNumbers[0]}
+            setHoveredCells={setHoveredCells}
+            hoveredCells={hoveredCells}
+            onDropCallback={onDropHandler}
+          />
           {RouletteNumbers.slice(1).map((num) => (
             <Cell
               number={num}
