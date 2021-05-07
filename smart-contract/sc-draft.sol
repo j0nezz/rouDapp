@@ -4,20 +4,6 @@ import "@chainlink/contracts/src/v0.6/VRFConsumerBase.sol";
 import "@openzeppelin/contracts-ethereum-package/contracts/math/SafeMath.sol";
 
 contract Roulette is VRFConsumerBase {
-   // contract owner
-   address payable private owner;
-   
-   // state variables 
-    bytes32 internal keyHash;
-    uint256 internal fee;
-    uint256 private minimumStake = 100000000000000000;
-    
-    // dict where for each game the respective bets are stored 
-    mapping(bytes32 => RequestedBet) public bets;
-
-    
-    
-    
     // custom defined types to group several variables
     struct Bet { 
            uint256 amount;
@@ -29,6 +15,23 @@ contract Roulette is VRFConsumerBase {
            uint8[] numbers;
            address payable sender;
     }
+    
+   // contract owner
+   address payable private owner;
+   
+   // state variables 
+    bytes32 private keyHash;
+    uint256 private fee;
+    uint256 private minimumStake = 100000000000000000;
+    
+    // dict where for each game the respective bets are stored 
+    mapping(bytes32 => RequestedBet) private bets;
+    
+    // random number and amount
+    event Win(uint result, uint winningSum, address player);
+    event Loose(uint result, address player);
+
+
     
     /**
      * Constructor inherits VRFConsumerBase
@@ -45,78 +48,76 @@ contract Roulette is VRFConsumerBase {
         ) public payable
     {
         keyHash = 0x6c3699283bda56ad74f6b855546325b68d482e983852a7a82979cc4807b641f4;
-        // fee = 0.1 * 10 ** 18; // 0.1 LINK (Varies by network)
-        fee = SafeMath.mul(1, 10**18);
+        // 0.1 LINK
+        fee = 10**17;
     
         owner = msg.sender;
     }
     
     // invoked by each user when playing
-    function playGame(uint8[] memory numbers) public payable{
-        // require(getContractBalance() >= (msg.value * (36/numbers.length)), "Not enough money available");
+    function playGame(uint8[] memory numbers) public payable {
+        // Show error in case SC owns not enough LINK token
+        require(LINK.balanceOf(address(this)) >= fee, "Not enough LINK - fill contract with faucet");
+        
+        // Show error in case stake is below minumum stake
         require(msg.value >= minimumStake, "Below minimum stake!");
-        require(getContractBalance() >= SafeMath.mul(msg.value , SafeMath.div(36,numbers.length)), "Not enough money available");
+        
+        // Show error in case SC owns not enough money for possible payout
+        require(address(this).balance >= SafeMath.mul(msg.value , SafeMath.div(36,numbers.length)), "Not enough money available on SC");
         bytes32 requestId  = requestRandomness(keyHash, fee, block.number);
+        
+        // save bet request in dict
         bets[requestId] = RequestedBet({
             amount: msg.value,
             numbers: numbers,
             sender: msg.sender
         });
     }
-    /** 
-     * Requests randomness from a user-provided seed
-     */
-    function getRandomNumber(uint256 userProvidedSeed) public returns (bytes32 requestId) {
-        require(LINK.balanceOf(address(this)) >= fee, "Not enough LINK - fill contract with faucet");
-        return requestRandomness(keyHash, fee, userProvidedSeed);
-    }
-
-    // random number and amount
-    event Win(uint result, uint winningSum, address player);
-    event Loose(uint result, address player);
-
-    /**
-     * Callback function used by VRF Coordinator
-     */
-    function fulfillRandomness(bytes32 requestId, uint256 randomness) internal override {
-        // uint8 requestedNumber = uint8(randomness%37); // True => Winner pay out // False => Looser do nothing
-        uint8 requestedNumber = uint8(SafeMath.mod(randomness, 37));
-        for(uint8 i=0; i<bets[requestId].numbers.length; i++){
-            if(requestedNumber == bets[requestId].numbers[i]){
-                // bets[requestId].sender.transfer((bets[requestId].amount/36)*bets[requestId].numbers.length);
-                bets[requestId].sender.transfer(SafeMath.mul(SafeMath.div(bets[requestId].amount, 36), bets[requestId].numbers.length));
-                // emit Win(requestedNumber, (bets[requestId].amount/36)*bets[requestId].numbers.length, bets[requestId].sender);
-                emit Win(requestedNumber, SafeMath.mul(SafeMath.div(bets[requestId].amount, 36), bets[requestId].numbers.length), bets[requestId].sender);
-                return;
-            } 
-        }
-        emit Loose(requestedNumber, bets[requestId].sender);
-    }
     
-    function getContractBalance() public view returns (uint256) {
-        return address(this).balance;
-    }
     
+    // Get minimun stake value
     function getMinimumStake() public view returns (uint256) {
         return minimumStake;
     }
     
+    // Set minimum stake amount 
     function setMinimumStake(uint256 newMinimumStake) public {
+        // Show error in case requester is not owner
         require(msg.sender == owner, "Caller is not owner");
-        
         minimumStake = newMinimumStake;
     }
     
     
     function withdrawContractMoney(uint256 amount) public payable {
+        // Show error in case requester is not contract owner
         require(msg.sender == owner, "Caller is not owner");
         
-        if(getContractBalance() >= amount) {
+        // Check if requested amount available on contract
+        if(address(this).balance >= amount) {
+            // Transfer ether
             owner.transfer(amount);
         }
-        
     }
-    
 
-    // function withdrawLink() external {} - Implement a withdraw function to avoid locking your LINK in the contract
+    /**
+     * Callback function used by VRF Coordinator
+     */
+    function fulfillRandomness(bytes32 requestId, uint256 randomness) internal override {
+        // Calculate number between 0 and 36
+        uint8 requestedNumber = uint8(SafeMath.mod(randomness, 37));
+        
+        // Is random number included in user's bet
+        for(uint8 i=0; i<bets[requestId].numbers.length; i++){
+            if(requestedNumber == bets[requestId].numbers[i]){
+                // Transfer ether to winner 
+                bets[requestId].sender.transfer(SafeMath.mul(SafeMath.div(bets[requestId].amount, 36), bets[requestId].numbers.length));
+                
+                // Emit win event
+                emit Win(requestedNumber, SafeMath.mul(SafeMath.div(bets[requestId].amount, 36), bets[requestId].numbers.length), bets[requestId].sender);
+                return;
+            } 
+        }
+        // Emit loose event
+        emit Loose(requestedNumber, bets[requestId].sender);
+    }
 }
