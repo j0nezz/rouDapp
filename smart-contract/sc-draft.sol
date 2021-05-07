@@ -10,6 +10,7 @@ contract Roulette is VRFConsumerBase {
    // state variables 
     bytes32 internal keyHash;
     uint256 internal fee;
+    uint256 private minimumStake = 100000000000000000;
     
     // dict where for each game the respective bets are stored 
     mapping(bytes32 => RequestedBet) public bets;
@@ -51,10 +52,11 @@ contract Roulette is VRFConsumerBase {
     }
     
     // invoked by each user when playing
-    function playGame(uint8[] memory numbers, uint256 userProvidedSeed) public payable{
+    function playGame(uint8[] memory numbers) public payable{
         // require(getContractBalance() >= (msg.value * (36/numbers.length)), "Not enough money available");
+        require(msg.value >= minimumStake, "Below minimum stake!");
         require(getContractBalance() >= SafeMath.mul(msg.value , SafeMath.div(36,numbers.length)), "Not enough money available");
-        bytes32 requestId  = requestRandomness(keyHash, fee, userProvidedSeed);
+        bytes32 requestId  = requestRandomness(keyHash, fee, block.number);
         bets[requestId] = RequestedBet({
             amount: msg.value,
             numbers: numbers,
@@ -94,6 +96,17 @@ contract Roulette is VRFConsumerBase {
     function getContractBalance() public view returns (uint256) {
         return address(this).balance;
     }
+    
+    function getMinimumStake() public view returns (uint256) {
+        return minimumStake;
+    }
+    
+    function setMinimumStake(uint256 newMinimumStake) public {
+        require(msg.sender == owner, "Caller is not owner");
+        
+        minimumStake = newMinimumStake;
+    }
+    
     
     function withdrawContractMoney(uint256 amount) public payable {
         require(msg.sender == owner, "Caller is not owner");
