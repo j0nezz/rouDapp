@@ -57,7 +57,7 @@ const UpperLowerCell: React.FC<Props> = ({
         column={column}
         onDragOver={(e) => {
           e.preventDefault();
-          setHoveredCells(createUpperLowerSequence(true));
+          setHoveredCells(createUpperLowerSequence(false));
         }}
         onDrop={onDropCallback}
       />
@@ -65,7 +65,7 @@ const UpperLowerCell: React.FC<Props> = ({
         hover={false}
         onDragOver={(e) => {
           e.preventDefault();
-          setHoveredCells(createUpperLowerSequence(false));
+          setHoveredCells(createUpperLowerSequence(true));
         }}
         onDrop={onDropCallback}
       />{" "}
