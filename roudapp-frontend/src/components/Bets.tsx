@@ -7,6 +7,7 @@ import { Button } from "./Button";
 import { usePopupContext } from "./context/PopupContext";
 import { useWeb3Context } from "./context/Web3Context";
 import ResultPopup from "./Popups/ResultPopup";
+import SelectedAccountBadge from "./SelectedAccountBadge";
 
 // type Bet = {
 //   numbersPlaced: number[];
@@ -20,6 +21,7 @@ type Props = {
 const Wrapper = styled.div`
   margin-top: ${SPACING * 8}px;
   flex: 1;
+  max-width: 300px;
 `;
 
 const Box = styled.div`
@@ -28,7 +30,9 @@ const Box = styled.div`
   padding: ${SPACING}px;
   max-width: 300px;
   margin-left: auto;
+  margin-top: ${SPACING}px;
 `;
+
 const BetTitle = styled(Title)`
   font-size: 2em;
   max-width: 200px;
@@ -72,6 +76,7 @@ const Bets: React.FC<Props> = ({ placedBets }) => {
 
   return (
     <Wrapper>
+      <SelectedAccountBadge />
       <Box>
         <BetTitle>Bets</BetTitle>
         {placedBets.length === 0 ? (

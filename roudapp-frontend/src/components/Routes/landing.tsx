@@ -6,6 +6,7 @@ import { Subtitle, Title } from "../../theme/typography";
 import { Button } from "../Button";
 import { useWeb3Context } from "../context/Web3Context";
 import RouletteSpinner from "../RouletteSpinner";
+import SelectedAccountBadge from "../SelectedAccountBadge";
 
 const Wrapper = styled.div`
   display: flex;
@@ -30,9 +31,12 @@ const Landing = () => {
       <Title>RouDapp</Title>
       <Subtitle>Decentralized Roulette using ChainLink VRF</Subtitle>
       {account ? (
-        <Link to={"/app"}>
-          <Button>Open App</Button>
-        </Link>
+        <>
+          <SelectedAccountBadge />
+          <Link to={"/app"}>
+            <Button>Open App</Button>
+          </Link>
+        </>
       ) : (
         <Button onClick={connectWallet}>Connect Wallet</Button>
       )}
