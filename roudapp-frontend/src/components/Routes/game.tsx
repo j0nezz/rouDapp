@@ -15,10 +15,12 @@ const Game = () => {
   const [addedBets, setAddedBets] = useState<number[]>([]);
 
   return (
-    <Container>
-      <Board onDropCallback={(n) => setAddedBets(n)} />
-      <Bets placedBets={addedBets} />
-    </Container>
+    <>
+      <Container>
+        <Board onDropCallback={(n) => setAddedBets(n)} />
+        <Bets placedBets={addedBets} />
+      </Container>
+    </>
   );
 };
 

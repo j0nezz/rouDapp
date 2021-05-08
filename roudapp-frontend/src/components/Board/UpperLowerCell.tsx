@@ -10,7 +10,11 @@ const Wrapper = styled.div<{ hover: boolean; column: string }>`
   grid-row: 10/14;
   width: 100%;
   height: 100%;
-  border: 1px solid red;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 10px;
+  display: flex;
+  justify-content: center; /* align horizontal */
+  align-items: center; /* align vertical */
 `;
 
 const Secondary = styled(Wrapper).attrs({ column: "3" })`
@@ -20,7 +24,8 @@ const Secondary = styled(Wrapper).attrs({ column: "3" })`
 `;
 
 const Label = styled.div<{}>`
-  color: red;
+  color: ${__COLORS.WHITE};
+  font-size: 1.5em;
 `;
 
 const createUpperLowerSequence = (upper: boolean): number[] => {
@@ -65,7 +70,6 @@ const UpperLowerCell: React.FC<Props> = ({
         }}
         onDrop={onDropCallback}
       >
-        {" "}
         <Label>Lower Half</Label>
       </Wrapper>
       <Secondary
