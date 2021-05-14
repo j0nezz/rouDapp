@@ -4,8 +4,6 @@ import "@chainlink/contracts/src/v0.6/VRFConsumerBase.sol";
 import "@openzeppelin/contracts-ethereum-package/contracts/math/SafeMath.sol";
 
 contract Roulette is VRFConsumerBase {
-    // TODO create field variable 'lockedAmount'
-    // TODO uncomment 'require(msg.value >= minimumStake, "Below minimum stake!");' in playGame
     
     // custom defined types to group several variables
     struct Bet { 
