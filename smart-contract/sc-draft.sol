@@ -26,6 +26,7 @@ contract Roulette is VRFConsumerBase {
     bytes32 private keyHash;
     uint256 private fee;
     uint256 private minimumStake = 100000000000000000;
+    uint256 private lockedAmount = 0;
     
     // dict where for each game the respective bets are stored 
     mapping(bytes32 => RequestedBet) private bets;
@@ -57,16 +58,27 @@ contract Roulette is VRFConsumerBase {
         owner = msg.sender;
     }
     
+    // Alows to transfter amout to deployed SC
+    fallback() payable  external  {
+    }
+    
     // invoked by each user when playing
     function playGame(uint8[] memory numbers) public payable {
         // Show error in case SC owns not enough LINK token
         require(LINK.balanceOf(address(this)) >= fee, "Not enough LINK - fill contract with faucet");
         
         // Show error in case stake is below minumum stake
-        // require(msg.value >= minimumStake, "Below minimum stake!");
+         require(msg.value >= minimumStake, "Below minimum stake!");
+         
+         // Calculate possible payout
+         uint256 possiblePayout = SafeMath.mul(msg.value , SafeMath.div(36,numbers.length));
         
         // Show error in case SC owns not enough money for possible payout
-        require(address(this).balance >= SafeMath.mul(msg.value , SafeMath.div(36,numbers.length)), "Not enough money available on SC");
+        require(address(this).balance >= possiblePayout + lockedAmount, "Not enough money available on SC");
+        
+        // Lock amount of current players
+        lockedAmount += possiblePayout;
+        
         bytes32 requestId  = requestRandomness(keyHash, fee, block.number);
         
         // save bet request in dict
@@ -76,7 +88,6 @@ contract Roulette is VRFConsumerBase {
             sender: msg.sender
         });
     }
-    
     
     // Get minimun stake value
     function getMinimumStake() public view returns (uint256) {
@@ -89,7 +100,6 @@ contract Roulette is VRFConsumerBase {
         require(msg.sender == owner, "Caller is not owner");
         minimumStake = newMinimumStake;
     }
-    
     
     function withdrawContractMoney(uint256 amount) public payable {
         // Show error in case requester is not contract owner
@@ -109,17 +119,26 @@ contract Roulette is VRFConsumerBase {
         // Calculate number between 0 and 36
         uint8 requestedNumber = uint8(SafeMath.mod(randomness, 37));
         
+        uint256 payoutAmount = SafeMath.div(SafeMath.mul(bets[requestId].amount, 36), bets[requestId].numbers.length);
+        
         // Is random number included in user's bet
         for(uint8 i=0; i<bets[requestId].numbers.length; i++){
             if(requestedNumber == bets[requestId].numbers[i]){
                 // Transfer ether to winner 
-                bets[requestId].sender.transfer(SafeMath.div(SafeMath.mul(bets[requestId].amount, 36), bets[requestId].numbers.length));
+                bets[requestId].sender.transfer(payoutAmount);
+                
+                // Unlock amount of current players
+                lockedAmount -= payoutAmount;
                 
                 // Emit win event
-                emit Win(requestedNumber, SafeMath.div(SafeMath.mul(bets[requestId].amount, 36), bets[requestId].numbers.length), bets[requestId].sender);
+                emit Win(requestedNumber, payoutAmount, bets[requestId].sender);
                 return;
             } 
         }
+        
+        // Unlock amount of current players
+        lockedAmount -= payoutAmount;
+        
         // Emit loose event
         emit Loose(requestedNumber, bets[requestId].sender);
     }
