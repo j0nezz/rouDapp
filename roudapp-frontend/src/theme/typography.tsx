@@ -3,12 +3,12 @@ import styled from "styled-components";
 import { __FONT_FAMILIES } from "./fonts";
 import { __COLORS } from "./theme";
 
-export const Title = styled.h1`
+export const Title = styled.h1<{ color?: string }>`
   font-size: 5em;
   background: linear-gradient(
     to right,
-    ${__COLORS.PRIMARY},
-    ${__COLORS.PRIMARY_GRADIENT}
+    ${(p) => p.color ?? __COLORS.PRIMARY},
+    ${(p) => (p.color ? lighten(0.1, p.color) : __COLORS.PRIMARY_GRADIENT)}
   );
   -webkit-background-clip: text;
   -moz-background-clip: text;

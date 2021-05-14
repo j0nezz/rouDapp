@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
-import { SPACING } from "../../theme/theme";
+import useInterval from "../../hooks/useInterval";
+import { SPACING, __COLORS } from "../../theme/theme";
 import { Subtitle, Title } from "../../theme/typography";
 import { Button } from "../Button";
 import { usePopupContext } from "../context/PopupContext";
@@ -10,7 +11,7 @@ import { PopupWrapper } from "./common";
 
 type Result = {
   success: boolean;
-  number: string;
+  number?: string;
   winningSum?: string;
 };
 
@@ -24,9 +25,15 @@ const Amount = styled(Title)`
   margin: ${SPACING}px 0;
 `;
 
-const ResultPopup: React.FC<Props> = ({ bet }) => {
+const Link = styled.a`
+  color: ${__COLORS.SECONDARY};
+  text-decoration: underline;
+`;
+
+const ResultPopup: React.FC<Props> = ({ bet, tx }) => {
+  const [error, setError] = useState("");
   const [result, setResult] = useState<Result | null>(null);
-  const { contract, account } = useWeb3Context();
+  const { contract, account, metamask } = useWeb3Context();
   const { clearPopup } = usePopupContext();
   const onLoose = useCallback(
     (data: any, error: any) => {
@@ -52,6 +59,27 @@ const ResultPopup: React.FC<Props> = ({ bet }) => {
     [account]
   );
 
+  useInterval(
+    () => {
+      getReceipt();
+    },
+    // Delay in milliseconds or null to stop it
+    result ? null : 1000
+  );
+
+  const getReceipt = useCallback(async () => {
+    try {
+      const receipt = await metamask?.eth.getTransactionReceipt(tx);
+      if (receipt && receipt.status === false) {
+        setError("The transaction failed, please try again later");
+        setResult({ success: false });
+      }
+    } catch (e) {
+      setError(String(e));
+      console.log("ERRROR", e);
+    }
+  }, [metamask?.eth, tx]);
+
   useEffect(() => {
     contract.events.Loose(
       { filter: { address: account } },
@@ -61,7 +89,20 @@ const ResultPopup: React.FC<Props> = ({ bet }) => {
       { filter: { address: account } },
       (error: any, data: any) => onSuccess(data, error)
     );
-  }, [account, contract.events, onLoose, onSuccess]);
+  }, [account, contract.events, getReceipt, onLoose, onSuccess]);
+
+  if (error) {
+    return (
+      <PopupWrapper>
+        <Title color={__COLORS.RED}>Oh No!</Title>
+        <Subtitle>The transaction failed, please try again later.</Subtitle>
+        <Link href={"https://kovan.etherscan.io/tx/" + tx} target={"_blank"}>
+          View Transaction on Etherscan
+        </Link>
+        <Button onClick={clearPopup}>New game</Button>
+      </PopupWrapper>
+    );
+  }
 
   if (!result) {
     return (
@@ -69,12 +110,17 @@ const ResultPopup: React.FC<Props> = ({ bet }) => {
         <Title>Good Luck!</Title>
         <RouletteSpinner infinite />
         <Subtitle>Awaiting Result</Subtitle>
+        <Link href={"https://kovan.etherscan.io/tx/" + tx} target={"_blank"}>
+          View Transaction on Etherscan
+        </Link>
       </PopupWrapper>
     );
   }
   return (
     <PopupWrapper>
-      <Title>{result.success ? "Success!" : "Oh snap!"}</Title>
+      <Title color={result.success ? undefined : __COLORS.RED}>
+        {result.success ? "Success!" : "Oh snap!"}
+      </Title>
       <Subtitle>You betted on {bet.join(", ")} </Subtitle>
       <Subtitle>
         The ball landed on <b>{result.number}</b>
