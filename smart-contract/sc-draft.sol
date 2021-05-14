@@ -57,7 +57,7 @@ contract Roulette is VRFConsumerBase {
     }
     
     // Alows to transfter amout to deployed SC
-    fallback() payable  external  {
+    fallback() payable external  {
     }
     
     // invoked by each user when playing
