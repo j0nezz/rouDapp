@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from "react";
 import styled from "styled-components";
-import { SPACING, __COLORS } from "../../theme/theme";
+import { __COLORS } from "../../theme/theme";
 import { RouletteNumbers } from "../../types/Roulette";
 import Cell from "./Cell";
 import ColorCell from "./SpecialFields/ColorCell";
@@ -9,8 +9,12 @@ import UpperLowerCell from "./SpecialFields/UpperLowerCell";
 import Zero from "./Zero";
 
 const ChipsWrapper = styled.div`
-  grid-column: 3;
+  grid-column: 2/4;
   grid-row: 1;
+  background: ${__COLORS.PRIMARY};
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 const CHIP_SIZE = 40;
@@ -33,11 +37,12 @@ const Chip = styled.div<{ color: string }>`
     font-weight: bold;
     font-size: 1.1em;
   }
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.25);
 `;
 const NumbersWrapper = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  grid-auto-rows: minmax(60px, auto);
+  grid-auto-rows: minmax(30px, auto);
   width: 100%;
   margin: auto;
   background-color: darkgreen;
@@ -45,15 +50,17 @@ const NumbersWrapper = styled.div`
   flex: 2;
   grid-column: 1;
   grid-row: 1/14;
+  height: max(700px, 70vh);
 `;
 
 const BoardWrapper = styled.div`
-  margin-top: ${SPACING}px;
   flex: 2;
   max-width: 600px;
   display: grid;
   grid-template-columns: auto 80px 80px;
-  grid-auto-rows: minmax(60px, auto);
+  grid-auto-rows: minmax(30px, auto);
+  height: max(700px, 70vh);
+  box-shadow: 2px 2px 5px ${__COLORS.PRIMARY};
 `;
 
 type Props = {

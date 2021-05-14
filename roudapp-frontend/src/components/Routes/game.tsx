@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import { SPACING } from "../../theme/theme";
+import { Title } from "../../theme/typography";
 import Bets from "../Bets";
 import Board from "../Board/Board";
 
@@ -11,14 +13,22 @@ const Container = styled.div`
   justify-content: space-between;
 `;
 
+const GameTitle = styled(Title)`
+  font-size: 3em;
+  padding-bottom: ${SPACING * 2}px;
+`;
+
 const Game = () => {
   const [addedBets, setAddedBets] = useState<number[]>([]);
 
   return (
-    <Container>
-      <Board onDropCallback={(n) => setAddedBets(n)} addedBets={addedBets} />
-      <Bets placedBets={addedBets} />
-    </Container>
+    <>
+      <GameTitle>RouDApp - Make your Bet!</GameTitle>
+      <Container>
+        <Board onDropCallback={(n) => setAddedBets(n)} addedBets={addedBets} />
+        <Bets placedBets={addedBets} />
+      </Container>
+    </>
   );
 };
 

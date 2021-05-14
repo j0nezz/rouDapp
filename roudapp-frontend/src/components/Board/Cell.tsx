@@ -11,7 +11,6 @@ const CellWrapper = styled.div<{ hover: boolean; hasBet: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 10px;
   border: 1px solid rgba(255, 255, 255, 0.3);
   background: ${(p) =>
     p.hover
@@ -27,8 +26,10 @@ const StyledCell = styled.div<{ color: COLOR }>`
   align-items: center;
   border-radius: 50%;
   background: ${(p) => p.color};
-  width: ${CIRCLE_SIZE}px;
-  height: ${CIRCLE_SIZE}px;
+  max-width: ${CIRCLE_SIZE}px;
+  max-height: ${CIRCLE_SIZE}px;
+  width: 100%;
+  height: 100%;
   opacity: 0.9;
   font-size: 20px;
   font-weight: bold;
@@ -38,8 +39,8 @@ const HasBet = css`
   &:before {
     content: "";
     position: absolute;
-    width: 40px;
-    height: 40px;
+    width: 20px;
+    height: 20px;
     background: ${__COLORS.SECONDARY};
     opacity: 0.75;
     border-radius: 50%;
@@ -174,6 +175,7 @@ const Cell: React.FC<Props> = ({
               e.preventDefault();
               setHoveredCells(createSequenceFrom(number.value, 3));
             }}
+            onDragLeave={() => setHoveredCells([])}
             onDrop={onDropCallback}
           />
           <TwoRowDragzone
@@ -181,6 +183,7 @@ const Cell: React.FC<Props> = ({
               e.preventDefault();
               setHoveredCells(createSequenceFrom(number.value, 6));
             }}
+            onDragLeave={() => setHoveredCells([])}
             onDrop={onDropCallback}
           />
         </>
@@ -193,6 +196,7 @@ const Cell: React.FC<Props> = ({
               e.preventDefault();
               setHoveredCells(createSequenceFrom(number.value, -3));
             }}
+            onDragLeave={() => setHoveredCells([])}
             onDrop={onDropCallback}
           />
           <TwoRowDragzoneRight
@@ -200,6 +204,7 @@ const Cell: React.FC<Props> = ({
               e.preventDefault();
               setHoveredCells(createSequenceFrom(number.value, -6));
             }}
+            onDragLeave={() => setHoveredCells([])}
             onDrop={onDropCallback}
           />
         </>
@@ -212,6 +217,7 @@ const Cell: React.FC<Props> = ({
               e.preventDefault();
               setHoveredCells(createSequenceFrom(number.value, 2));
             }}
+            onDragLeave={() => setHoveredCells([])}
             onDrop={onDropCallback}
           />
           <BottomRightCornerDragzone
@@ -223,6 +229,7 @@ const Cell: React.FC<Props> = ({
                 )
               );
             }}
+            onDragLeave={() => setHoveredCells([])}
             onDrop={onDropCallback}
           />
         </>
@@ -234,6 +241,7 @@ const Cell: React.FC<Props> = ({
             e.preventDefault();
             setHoveredCells(createVerticalSequenceFrom(number.value, 2));
           }}
+          onDragLeave={() => setHoveredCells([])}
           onDrop={onDropCallback}
         />
       )}
@@ -244,6 +252,7 @@ const Cell: React.FC<Props> = ({
             e.preventDefault();
             setHoveredCells(createVerticalSequenceFrom(number.value, -12));
           }}
+          onDragLeave={() => setHoveredCells([])}
           onDrop={onDropCallback}
         />
       )}
@@ -255,6 +264,7 @@ const Cell: React.FC<Props> = ({
           e.preventDefault();
           setHoveredCells(createSequenceFrom(number.value, 1));
         }}
+        onDragLeave={() => setHoveredCells([])}
         onDrop={onDropCallback}
       >
         {number.value}

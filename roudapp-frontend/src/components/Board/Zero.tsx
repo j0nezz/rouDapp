@@ -9,7 +9,6 @@ const ZeroWrapper = styled.div<{ hover: boolean }>`
   align-items: flex-end;
   font-size: 30px;
   font-weight: bold;
-  padding-bottom: 10px;
   background: ${(p) => (p.hover ? "rgba(255,255,255,0.3)" : "none")};
 `;
 
