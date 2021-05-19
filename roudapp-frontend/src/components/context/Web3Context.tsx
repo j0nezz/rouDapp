@@ -6,7 +6,7 @@ import {
   useState,
 } from "react";
 import Web3 from "web3";
-import { CONTRACT_ABI, CONTRACT_ADDRESS } from "../../contract";
+import { CONTRACT_ABI, CONTRACT_ADDRESS, NETWORK_ID } from "../../contract";
 
 type Web3ContextType = {
   metamask: Web3 | null;
@@ -38,6 +38,10 @@ export const Web3ContextProvider: React.FC = ({ children }) => {
       setLoading(true);
       // @ts-ignore
       const web3 = new Web3(window.ethereum);
+      const networkId = await web3.eth.net.getId();
+      if (networkId !== NETWORK_ID) {
+        setError("Please switch to the Kovan Network");
+      }
       const accountResponse = await web3.eth.getAccounts();
       if (accountResponse.length > 0) {
         setAccount(accountResponse[0]);
@@ -93,6 +97,20 @@ export const Web3ContextProvider: React.FC = ({ children }) => {
   useEffect(() => {
     loadExistingSession();
   }, [loadExistingSession]);
+
+  const checkNetwork = useCallback((networkId: string) => {
+    if (parseInt(networkId, 10) !== NETWORK_ID) {
+      setError("Please change to Kovan network");
+    } else {
+      setError("");
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!(window as any).ethereum) return;
+    // @ts-ignore
+    window.ethereum.on("networkChanged", checkNetwork);
+  }, [checkNetwork]);
 
   return (
     <Web3Context.Provider

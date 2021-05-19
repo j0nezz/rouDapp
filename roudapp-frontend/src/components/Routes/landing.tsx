@@ -34,7 +34,9 @@ const Landing = () => {
         <>
           <SelectedAccountBadge />
           <Link to={"/app"}>
-            <Button>Open App</Button>
+            <Button type={"button"} disabled={Boolean(error)}>
+              Open App
+            </Button>
           </Link>
         </>
       ) : (

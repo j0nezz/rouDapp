@@ -121,3 +121,5 @@ export const CONTRACT_ABI = [
 ];
 
 export const CONTRACT_ADDRESS = "0xbEA9Eb8e86FD0Dd61c95fd4c8cE7808eFb602879";
+
+export const NETWORK_ID = 42;

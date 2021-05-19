@@ -7,7 +7,7 @@ import { Button } from "./Button";
 import { usePopupContext } from "./context/PopupContext";
 import { useWeb3Context } from "./context/Web3Context";
 import ResultPopup from "./Popups/ResultPopup";
-import SelectedAccountBadge from "./SelectedAccountBadge";
+import SelectedAccountBadge, { BadgeWrapper } from "./SelectedAccountBadge";
 
 // type Bet = {
 //   numbersPlaced: number[];
@@ -57,7 +57,7 @@ const BoldSubTitle = styled.div`
   color: ${__COLORS.SECONDARY};
 `;
 const Bets: React.FC<Props> = ({ placedBets }) => {
-  const { contract, account } = useWeb3Context();
+  const { contract, account, error } = useWeb3Context();
   const { setPopup } = usePopupContext();
   const [amount, setAmount] = useState("0.1");
 
@@ -76,6 +76,8 @@ const Bets: React.FC<Props> = ({ placedBets }) => {
 
   return (
     <Wrapper>
+      {error && <BadgeWrapper color={__COLORS.RED}>{error}</BadgeWrapper>}
+
       <SelectedAccountBadge />
       <Box>
         <BetTitle>Bets</BetTitle>
@@ -92,7 +94,10 @@ const Bets: React.FC<Props> = ({ placedBets }) => {
               value={amount}
             />
 
-            <Button onClick={placeBets} disabled={placedBets.length < 1}>
+            <Button
+              onClick={placeBets}
+              disabled={placedBets.length < 1 || Boolean(error)}
+            >
               Play Game
             </Button>
           </>
