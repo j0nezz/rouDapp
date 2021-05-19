@@ -5,12 +5,7 @@ import "@openzeppelin/contracts-ethereum-package/contracts/math/SafeMath.sol";
 
 contract Roulette is VRFConsumerBase {
     
-    // custom defined types to group several variables
-    struct Bet { 
-           uint256 amount;
-           uint8[] numbers;
-    }
-    
+    // custom defined types to record user's bet 
     struct RequestedBet { 
            uint256 amount;
            uint8[] numbers;
